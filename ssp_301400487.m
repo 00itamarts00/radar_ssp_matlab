@@ -53,7 +53,7 @@ noise_az = R(:, 3);
 
 
 % cartesian coordinates GT
-r0 = [0, 0, -2000];
+r0 = [100, 100, 100];
 x = r0(1) + Vx.*t;
 y = r0(2) + Vy.*t;
 z = r0(3) + Vz.*t -0.5*g_acc.*t.^2;
@@ -78,4 +78,5 @@ hold on;
 scatter3(xn, yn, zn, 1, 'filled');
 
 % Estimation
+[r_est, az_est, el_est] = get_first_order_spherical_est(x(1), y(1), z(1), xn(1), yn(1), zn(1));
 
