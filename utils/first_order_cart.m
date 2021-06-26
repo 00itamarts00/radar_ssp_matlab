@@ -19,7 +19,6 @@ y = r_origin*sind(az_origin)*sind(el_origin) + dr*(r-r_origin) + daz*(az-az_orig
 end
 
 function [z] = first_order_z(r_origin, az_origin, el_origin, r, az, el)
-
 dr = cosd(el_origin);
 del = -r*sind(el_origin);
 daz = 0;

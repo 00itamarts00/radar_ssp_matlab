@@ -38,7 +38,7 @@ Vx = V_decompose(1);
 Vy = V_decompose(2);
 Vz = V_decompose(3);
 % Time of flight (assuming z0=zl=0)
-TOF = 2*Vz/g_acc;
+TOF = 2*V0_abs/g_acc;
 N = round((TOF - T0)*Fs);
 t = linspace(T0, TOF, N); 
 
@@ -76,7 +76,22 @@ title('projectile - GT/Noise');
 hold on;
 [xn, yn, zn] = Sphere_to_Cart(r_n, el_n, az_n);
 scatter3(xn, yn, zn, 1, 'filled');
+hold on;
 
-% Estimation
-[r_est, az_est, el_est] = get_first_order_spherical_est(x(1), y(1), z(1), xn(1), yn(1), zn(1));
+% Estimation if x0, y0, z0
+i = 1;
+[x_init_est, y_init_est, z_init_est] = first_order_cart(r_vec(i), az(i), el(i), r_n(i), az_n(i), el_n(i));
+x0_est = x_init_est - Vx*t(i);
+y0_est = y_init_est - Vy*t(i);
+z0_est = z_init_est - Vz*t(i) + 0.5*g_acc*t(i)^2;
+
+% Estimation if xl, yl, zl
+i = length(r_vec);
+[x_init_est, y_init_est, z_init_est] = first_order_cart(r_vec(i), az(i), el(i), r_n(i), az_n(i), el_n(i));
+xl_est = x_init_est - Vx*t(1);
+yl_est = y_init_est - Vy*t(1);
+zl_est = z_init_est - Vz*t(1) - 0.5*g_acc*t(i)^2;
+
+scatter3(x0_est, y0_est, z0_est, 50, 'filled')
+scatter3(xl_est, yl_est, zl_est, 50, 'filled')
 
