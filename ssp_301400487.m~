@@ -33,7 +33,7 @@ sigma_az2 = get_first_digit(itamar_id, 4) / 10;
 % grid()
 
 % decompose velocity
-V_decompose = V0_abs.*[cos(az_0)*cos(el_0), sin(az_0)*cos(el_0), sin(el_0)];
+V_decompose = V0_abs.*[cosd(az_0)*sind(el_0), cosd(az_0)*sind(el_0), sind(el_0)];
 Vx = V_decompose(1);
 Vy = V_decompose(2);
 Vz = V_decompose(3);
@@ -53,7 +53,7 @@ noise_az = R(:, 3);
 
 
 % cartesian coordinates GT
-r0 = [100, 100, 100];
+r0 = [1000, 1000, 1000];
 x = r0(1) + Vx.*t;
 y = r0(2) + Vy.*t;
 z = r0(3) + Vz.*t -0.5*g_acc.*t.^2;
@@ -71,11 +71,27 @@ plot3(x, y, z);
 grid();
 xlabel('x'); ylabel('y'); zlabel('z');
 hold on;
-arrow3(r0, 20.*[Vx, Vy, Vz]);
+arrow3(r0, 10.*[Vx, Vy, Vz]);
 title('projectile - GT/Noise');
 hold on;
 [xn, yn, zn] = Sphere_to_Cart(r_n, el_n, az_n);
 scatter3(xn, yn, zn, 1, 'filled');
+hold on;
 
-% Estimation
+% Estimation if x0, y0, z0
+i = 1;
+[x_init_est, y_init_est, z_init_est] = first_order_taylor_expansion(r_vec(i), az(i), el(i), r_n(i), az_n(i), el_n(i));
+x0_est = x_init_est - Vx*t(i);
+y0_est = y_init_est - Vy*t(i);
+z0_est = z_init_est - Vz*t(i) + 0.5*g_acc*t(i)^2;
+
+% Estimation if xl, yl, zl
+i = length(r_vec);
+[x_init_est, y_init_est, z_init_est] = first_order_taylor_expansion(r_vec(i), az(i), el(i), r_n(i), az_n(i), el_n(i));
+xl_est = x_init_est - Vx*t(i);
+yl_est = y_init_est - Vy*t(i);
+zl_est = z_init_est - Vz*t(i) + 0.5*g_acc.*t(i)^2;
+
+scatter3(x0_est, y0_est, z0_est, 50, 'filled')
+scatter3(xl_est, yl_est, zl_est, 50, 'filled')
 
