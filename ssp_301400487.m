@@ -33,7 +33,7 @@ sigma_az2 = get_first_digit(itamar_id, 4) / 10;
 % grid()
 
 % decompose velocity
-V_decompose = V0_abs.*[cosd(az_0)*sind(el_0), cosd(az_0)*sind(el_0), sind(el_0)];
+V_decompose = V0_abs.*[cosd(az_0)*cosd(el_0), sind(az_0)*cosd(el_0), cosd(el_0)];
 Vx = V_decompose(1);
 Vy = V_decompose(2);
 Vz = V_decompose(3);
@@ -53,7 +53,7 @@ noise_az = R(:, 3);
 
 
 % cartesian coordinates GT
-r0 = [1000, 1000, 1000];
+r0 = [1000, 1000, 0];
 x = r0(1) + Vx.*t;
 y = r0(2) + Vy.*t;
 z = r0(3) + Vz.*t -0.5*g_acc.*t.^2;
@@ -85,12 +85,13 @@ x0_est = x_init_est - Vx*t(i);
 y0_est = y_init_est - Vy*t(i);
 z0_est = z_init_est - Vz*t(i) + 0.5*g_acc*t(i)^2;
 
+
 % Estimation if xl, yl, zl
 i = length(r_vec);
 [x_init_est, y_init_est, z_init_est] = first_order_taylor_expansion(r_vec(i), az(i), el(i), r_n(i), az_n(i), el_n(i));
-xl_est = x_init_est - Vx*t(i);
-yl_est = y_init_est - Vy*t(i);
-zl_est = z_init_est - Vz*t(i) + 0.5*g_acc.*t(i)^2;
+xl_est = x_init_est + Vx*t(i) + x0_est;
+yl_est = y_init_est + Vy*t(i) + y0_est;
+zl_est = z_init_est + Vz*t(i) - 0.5*g_acc.*t(i)^2 +z0_est;
 
 scatter3(x0_est, y0_est, z0_est, 50, 'filled')
 scatter3(xl_est, yl_est, zl_est, 50, 'filled')

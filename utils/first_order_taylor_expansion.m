@@ -9,10 +9,10 @@ dyde = r_origin*sind(az_origin)*cosd(el_origin);
 
 dzdr = cosd(el_origin);
 dzda = 0;
-dzde = -r_origin*cosd(el_origin);
+dzde = -r_origin*sind(el_origin);
 
-x = r_origin*cosd(az_origin)*sind(el_origin) + dxdr*(r-r_origin) + dxda*(az - az_origin) + dxde*(el - el_origin);
-y = r_origin*sind(az_origin)*sind(el_origin) + dydr*(r-r_origin) + dyda*(az - az_origin) + dyde*(el - el_origin);
-z = r_origin*sind(el_origin) + dzdr*(r-r_origin) + dzda*(az - az_origin) + dzde*(el - el_origin);
+x = r_origin*cosd(az_origin)*sind(el_origin) + dxdr*(r_origin - r) + dxda*(az_origin - az) + dxde*(el_origin - el);
+y = r_origin*sind(az_origin)*sind(el_origin) + dydr*(r_origin - r) + dyda*(az_origin - az) + dyde*(el_origin - el);
+z = r_origin*cosd(el_origin)                 + dzdr*(r_origin - r) + dzda*(az_origin - az) + dzde*(el_origin - el);
 
 end
