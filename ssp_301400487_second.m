@@ -65,7 +65,7 @@ theta_n = theta + noise_theta';
 
 % plot projectile noisy, and gt
 figure(2)
-plot3(x, y, z);
+plot3(x, y, z, 'linewidth',3);
 grid();
 xlabel('x'); ylabel('y'); zlabel('z');
 hold on;
