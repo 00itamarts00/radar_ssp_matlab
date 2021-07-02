@@ -69,7 +69,7 @@ plot3(x, y, z);
 grid();
 xlabel('x'); ylabel('y'); zlabel('z');
 hold on;
-arrow3(xyz0, 10.*[Vx, Vy, Vz]);
+% arrow3(xyz0, [Vx, Vy, Vz]);
 title('projectile - GT/Noise');
 hold on;
 
@@ -93,7 +93,6 @@ z0_ls = res(1); v0z_ls = res(2); g_z = res(3);
 scatter3(x0_ls, y0_ls, z0_ls, 50, 'filled')
 
 % CRB
-i = 1;
 VAR_x_ml_fo = sigma_theta2*(r_n(i)*cosd(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*sind(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(cosd(phi_n(i))*sind(theta_n(i)))^2;
 CRB_x_ml_fo = 1/VAR_x_ml_fo;
 
@@ -102,4 +101,20 @@ CRB_y_ml_fo = 1/VAR_y_ml_fo;
 
 VAR_z_ml_fo = sigma_theta2*(r_n(i)*sind(theta_n(i)))^2 + sigma_r2*(cosd(theta_n(i)))^2;
 CRB_z_ml_fo = 1/VAR_z_ml_fo;
+
+
+% LS Estimation given
+i = length(x_ml);
+hx = [1, t(i)]';
+res = inv(hx'*hx)*hx'*x_ml(i);
+x0_ls = res(1); v0x_ls = res(2);
+hy = [1, t(i)]';
+res = inv(hy'*hy)*hy'*y_ml(i);
+y0_ls = res(1); v0y_ls = res(2);
+hz = [1, t(i), t(i)^2]';
+res = inv(hz'*hz)*hz'*z_ml(i);
+z0_ls = res(1); v0z_ls = res(2); g_z = res(3);
+
+scatter3(x0_ls+v0x_ls*t(i), y0_ls+v0y_ls*t(i), z0_ls+v0z_ls*t(i)-0.5*g_z^2, 50, 'filled')
+
 
