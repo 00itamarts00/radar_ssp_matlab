@@ -5,7 +5,7 @@ close all;
 % PARAMS
 itamar_id = 301400487;
 % Change to the correct ID
-ran_id = 301400487; 
+ran_id = 032734428; 
 V0_limits = [500, 1000]; % m/s
 g_acc = 10; % m/s^2
 Fs = 100; % samples/sec
@@ -61,7 +61,7 @@ z = xyz0(3) + Vz.*t -0.5*g_acc.*t.^2;
 r_n = r_vec + noise_r';
 phi_n = phi + noise_phi';
 theta_n = theta + noise_theta';
-%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%
 
 % plot projectile noisy, and gt
 figure(2)
@@ -69,52 +69,43 @@ plot3(x, y, z, 'linewidth',3);
 grid();
 xlabel('x'); ylabel('y'); zlabel('z');
 hold on;
-% arrow3(xyz0, [Vx, Vy, Vz]);
 title('projectile - GT/Noise');
 hold on;
 
-% ML Estimation if x0, y0, z0
-[x_ml, y_ml, z_ml] = Sphere_to_Cart(r_n, phi_n, theta_n);
+% ML Estimation
+[x_ml, y_ml, z_ml] = sphere_to_cart_noisy(r_n, phi_n, theta_n);
 scatter3(x_ml, y_ml, z_ml, 1, 'filled');
 hold on;
 
-% LS Estimation given
+% LS Estimation at r0
 i = 1;
-hx = [1, t(i)]';
-res = inv(hx'*hx)*hx'*x_ml(i);
-x0_ls = res(1); v0x_ls = res(2);
-hy = [1, t(i)]';
-res = inv(hy'*hy)*hy'*y_ml(i);
-y0_ls = res(1); v0y_ls = res(2);
-hz = [1, t(i), t(i)^2]';
-res = inv(hz'*hz)*hz'*z_ml(i);
-z0_ls = res(1); v0z_ls = res(2); g_z = res(3);
-
+[x0_ls, y0_ls, z0_ls] = ls_estimator(t(i), x_ml(i), y_ml(i), z_ml(i));
 scatter3(x0_ls, y0_ls, z0_ls, 50, 'filled')
+hold on;
 
 % CRB
-VAR_x_ml_fo = sigma_theta2*(r_n(i)*cosd(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*sind(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(cosd(phi_n(i))*sind(theta_n(i)))^2;
-CRB_x_ml_fo = 1/VAR_x_ml_fo;
+VAR_x0_ml_fo = sigma_theta2*(r_n(i)*cosd(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*sind(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(cosd(phi_n(i))*sind(theta_n(i)))^2;
+CRB_x0_ml_fo = 1/VAR_x0_ml_fo;
 
-VAR_y_ml_fo = sigma_theta2*(r_n(i)*sind(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*cosd(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(sind(phi_n(i))*sind(theta_n(i)))^2;
-CRB_y_ml_fo = 1/VAR_y_ml_fo;
+VAR_y0_ml_fo = sigma_theta2*(r_n(i)*sind(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*cosd(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(sind(phi_n(i))*sind(theta_n(i)))^2;
+CRB_y0_ml_fo = 1/VAR_y0_ml_fo;
 
-VAR_z_ml_fo = sigma_theta2*(r_n(i)*sind(theta_n(i)))^2 + sigma_r2*(cosd(theta_n(i)))^2;
-CRB_z_ml_fo = 1/VAR_z_ml_fo;
+VAR_z0_ml_fo = sigma_theta2*(r_n(i)*sind(theta_n(i)))^2 + sigma_r2*(cosd(theta_n(i)))^2;
+CRB_z0_ml_fo = 1/VAR_z0_ml_fo;
 
-
-% LS Estimation given
+% LS Estimation given hit point
 i = length(x_ml);
-hx = [1, t(i)]';
-res = inv(hx'*hx)*hx'*x_ml(i);
-x0_ls = res(1); v0x_ls = res(2);
-hy = [1, t(i)]';
-res = inv(hy'*hy)*hy'*y_ml(i);
-y0_ls = res(1); v0y_ls = res(2);
-hz = [1, t(i), t(i)^2]';
-res = inv(hz'*hz)*hz'*z_ml(i);
-z0_ls = res(1); v0z_ls = res(2); g_z = res(3);
+[xl_ls, yl_ls, zl_ls] = ls_estimator(t(i), x_ml(i), y_ml(i), z_ml(i));
+scatter3(xl_ls, yl_ls, zl_ls, 50, 'filled')
+hold on;
 
-scatter3(x0_ls+v0x_ls*t(i), y0_ls+v0y_ls*t(i), z0_ls+v0z_ls*t(i)-0.5*g_z^2, 50, 'filled')
+% CRB
+VAR_xl_ml_fo = sigma_theta2*(r_n(i)*cosd(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*sind(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(cosd(phi_n(i))*sind(theta_n(i)))^2;
+CRB_xl_ml_fo = 1/VAR_xl_ml_fo;
 
+VAR_yl_ml_fo = sigma_theta2*(r_n(i)*sind(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*cosd(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(sind(phi_n(i))*sind(theta_n(i)))^2;
+CRB_yl_ml_fo = 1/VAR_yl_ml_fo;
+
+VAR_zl_ml_fo = sigma_theta2*(r_n(i)*sind(theta_n(i)))^2 + sigma_r2*(cosd(theta_n(i)))^2;
+CRB_zl_ml_fo = 1/VAR_zl_ml_fo;
 
