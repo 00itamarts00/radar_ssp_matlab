@@ -1,5 +1,5 @@
 % start
-clear;
+clear all;
 close all;
 
 % PARAMS
@@ -21,15 +21,6 @@ sigma_r2 = get_first_digit(itamar_id, 1) / 10;
 sigma_phi2 = get_first_digit(itamar_id, 3) / 10;
 sigma_theta2 = get_first_digit(itamar_id, 4) / 10;
 
-% plot the noise
-% figure(1)
-% scatter3(noise_r, noise_phi, noise_theta, 10, 'filled')
-% xlabphi('r noise')
-% ylabphi('phi noise')
-% zlabphi('theta noise')
-% title('Plot of noise')
-% grid()
-
 % decompose vphiocity
 V_decompose = V0_abs.*[cosd(phi_0)*sind(theta_0), sind(phi_0)*sind(theta_0), cosd(theta_0)];
 Vx = V_decompose(1);
@@ -43,11 +34,19 @@ t = linspace(T_start, TOF, N);
 % generating noise
 rng('default')  % For reproducibility
 sigma_vec = [sigma_r2, sigma_phi2, sigma_theta2];
-R = mvnrnd([0, 0, 0], [sigma_r2, sigma_phi2, sigma_theta2], N);
+R = mvnrnd([0, 0, 0], [sigma_r2, sigma_phi2, sigma_theta2].*10, N);
 noise_r =  R(:, 1);
 noise_phi = R(:, 2);
 noise_theta = R(:, 3);
 
+% plot the noise
+figure()
+grid();
+scatter3(noise_r, noise_phi, noise_theta, 10, 'filled')
+xlabel('r noise')
+ylabel('phi noise');
+zlabel('theta noise');
+title('Plot of noise');
 
 % cartesian coordinates GT
 xyz0 = [1000, 1000, 1000];
