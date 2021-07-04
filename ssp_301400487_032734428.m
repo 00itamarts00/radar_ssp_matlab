@@ -83,14 +83,11 @@ scatter3(x0_ls, y0_ls, z0_ls, 50, 'filled')
 hold on;
 
 % CRB
-VAR_x0_ml_fo = sigma_theta2*(r_n(i)*cosd(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*sind(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(cosd(phi_n(i))*sind(theta_n(i)))^2;
-CRB_x0_ml_fo = 1/VAR_x0_ml_fo;
+CRB_x0_ml_fo = sigma_theta2*(r_n(i)*cosd(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*sind(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(cosd(phi_n(i))*sind(theta_n(i)))^2;
 
-VAR_y0_ml_fo = sigma_theta2*(r_n(i)*sind(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*cosd(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(sind(phi_n(i))*sind(theta_n(i)))^2;
-CRB_y0_ml_fo = 1/VAR_y0_ml_fo;
+CRB_y0_ml_fo = sigma_theta2*(r_n(i)*sind(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*cosd(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(sind(phi_n(i))*sind(theta_n(i)))^2;
 
-VAR_z0_ml_fo = sigma_theta2*(r_n(i)*sind(theta_n(i)))^2 + sigma_r2*(cosd(theta_n(i)))^2;
-CRB_z0_ml_fo = 1/VAR_z0_ml_fo;
+CRB_z0_ml_fo = sigma_theta2*(r_n(i)*sind(theta_n(i)))^2 + sigma_r2*(cosd(theta_n(i)))^2;
 
 % LS Estimation given hit point
 i = length(x_ml);
@@ -99,12 +96,9 @@ scatter3(xl_ls, yl_ls, zl_ls, 50, 'filled')
 hold on;
 
 % CRB
-VAR_xl_ml_fo = sigma_theta2*(r_n(i)*cosd(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*sind(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(cosd(phi_n(i))*sind(theta_n(i)))^2;
-CRB_xl_ml_fo = 1/VAR_xl_ml_fo;
+CRB_xl_ml_fo = sigma_theta2*(r_n(i)*cosd(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*sind(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(cosd(phi_n(i))*sind(theta_n(i)))^2;
 
-VAR_yl_ml_fo = sigma_theta2*(r_n(i)*sind(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*cosd(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(sind(phi_n(i))*sind(theta_n(i)))^2;
-CRB_yl_ml_fo = 1/VAR_yl_ml_fo;
+CRB_yl_ml_fo = sigma_theta2*(r_n(i)*sind(phi_n(i))*cosd(theta_n(i)))^2 + sigma_phi2*(r_n(i)*cosd(phi_n(i))*sind(theta_n(i)))^2 + sigma_r2*(sind(phi_n(i))*sind(theta_n(i)))^2;
 
-VAR_zl_ml_fo = sigma_theta2*(r_n(i)*sind(theta_n(i)))^2 + sigma_r2*(cosd(theta_n(i)))^2;
-CRB_zl_ml_fo = 1/VAR_zl_ml_fo;
+CRB_zl_ml_fo = sigma_theta2*(r_n(i)*sind(theta_n(i)))^2 + sigma_r2*(cosd(theta_n(i)))^2;
 
